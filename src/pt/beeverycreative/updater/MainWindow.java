@@ -30,14 +30,9 @@ public class MainWindow extends javax.swing.JFrame {
     }
 
     private DefaultComboBoxModel comboData;
-    private String jLabel1_flag;
+
     private static Platform os;
     private String selectedFilePath;
-
-    public String getJLabel1_flag() {
-
-        return jLabel1_flag;
-    }
 
     /**
      * Creates new form MainWindow
@@ -46,9 +41,9 @@ public class MainWindow extends javax.swing.JFrame {
         initComponents();
         setTitle("BEEVERYCREATIVE BootLoader Updater");
 
-        jButton2.setEnabled(false);
-        jLabel1.setText(jLabel1_flag);
-        jLabel4.setText("BEETHEFIRST-bootloader-4.1.0");
+        updateBtn.setEnabled(false);
+        statusLabel.setText("");
+        selectedFileLabel.setText("BEETHEFIRST-bootloader-4.1.0");
         //Default bootloader
         selectedFilePath = "tools/BEETHEFIRST-bootloader-4.1.0.bin";
     }
@@ -68,13 +63,14 @@ public class MainWindow extends javax.swing.JFrame {
         jFileChooser1 = new javax.swing.JFileChooser();
         jPanel2 = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
-        jComboBox2 = new javax.swing.JComboBox();
-        jButton1 = new javax.swing.JButton();
+        portsCombo = new javax.swing.JComboBox();
+        refreshBtn = new javax.swing.JButton();
         jLabel3 = new javax.swing.JLabel();
-        jButton2 = new javax.swing.JButton();
-        jLabel4 = new javax.swing.JLabel();
+        updateBtn = new javax.swing.JButton();
+        selectedFileLabel = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
         selectFileBtn = new javax.swing.JButton();
+        statusLabel = new javax.swing.JLabel();
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -106,31 +102,31 @@ public class MainWindow extends javax.swing.JFrame {
         jLabel2.setFont(new java.awt.Font("Lucida Grande", 1, 13)); // NOI18N
         jLabel2.setText("BEEVERYCREATIVE Bootloader Updater");
 
-        jComboBox2.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Please Refresh" }));
-        jComboBox2.addActionListener(new java.awt.event.ActionListener() {
+        portsCombo.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Please Refresh" }));
+        portsCombo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jComboBox2ActionPerformed(evt);
+                portsComboActionPerformed(evt);
             }
         });
 
-        jButton1.setText("Refresh");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        refreshBtn.setText("Refresh");
+        refreshBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                refreshBtnActionPerformed(evt);
             }
         });
 
         jLabel3.setText(" Port:");
 
-        jButton2.setFont(new java.awt.Font("Lucida Grande", 1, 13)); // NOI18N
-        jButton2.setText("Update");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
+        updateBtn.setFont(new java.awt.Font("Lucida Grande", 1, 13)); // NOI18N
+        updateBtn.setText("Update");
+        updateBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
+                updateBtnActionPerformed(evt);
             }
         });
 
-        jLabel4.setText("bootloader 3.4.0 ");
+        selectedFileLabel.setText("bootloader 3.4.0 ");
 
         selectFileBtn.setText("Select Bootloader...");
         selectFileBtn.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -144,32 +140,38 @@ public class MainWindow extends javax.swing.JFrame {
             }
         });
 
+        statusLabel.setText("Current Status");
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(23, 23, 23)
-                .addComponent(jLabel4)
-                .addGap(0, 0, Short.MAX_VALUE))
-            .addGroup(jPanel2Layout.createSequentialGroup()
-                .addGap(81, 81, 81)
-                .addComponent(jLabel2)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                .addContainerGap()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel1)
-                    .addComponent(jButton1))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 27, Short.MAX_VALUE)
-                .addComponent(jLabel3)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(selectFileBtn)
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(48, 48, 48)
-                        .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addContainerGap()
+                        .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addComponent(jLabel1)
+                                .addGap(0, 0, Short.MAX_VALUE))
+                            .addGroup(jPanel2Layout.createSequentialGroup()
+                                .addComponent(jLabel3)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(portsCombo, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(12, 12, 12)
+                                .addComponent(refreshBtn)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 69, Short.MAX_VALUE)
+                                .addComponent(updateBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGap(81, 81, 81)
+                        .addComponent(jLabel2))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addComponent(selectFileBtn)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(selectedFileLabel))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(statusLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
@@ -177,17 +179,19 @@ public class MainWindow extends javax.swing.JFrame {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jLabel2)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(selectFileBtn)
-                .addGap(8, 8, 8)
-                .addComponent(jLabel4)
-                .addGap(18, 18, 18)
+                .addGap(14, 14, 14)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(selectFileBtn)
+                    .addComponent(selectedFileLabel))
+                .addGap(20, 20, 20)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(refreshBtn)
+                    .addComponent(portsCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel3)
-                    .addComponent(jComboBox2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jButton1)
-                    .addComponent(jButton2))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                    .addComponent(updateBtn))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(statusLabel)
+                .addGap(32, 32, 32)
                 .addComponent(jLabel1)
                 .addGap(116, 116, 116))
         );
@@ -199,13 +203,14 @@ public class MainWindow extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGap(30, 30, 30)
                 .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(28, Short.MAX_VALUE))
+                .addContainerGap(24, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGap(0, 12, Short.MAX_VALUE)
-                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, 178, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, 146, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
         );
 
         pack();
@@ -216,9 +221,9 @@ public class MainWindow extends javax.swing.JFrame {
      * 
      * @param evt 
      */
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+    private void updateBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateBtnActionPerformed
 
-        jLabel1_flag = "Updating bootloader.";
+        statusLabel.setText("Updating bootloader...");
 
         ArrayList<String> comPorts = new ArrayList<>();
 
@@ -235,6 +240,9 @@ public class MainWindow extends javax.swing.JFrame {
 
         if (exec != null) {
             try {
+                refreshBtn.setEnabled(false);
+                updateBtn.setEnabled(false);
+                            
                 Process pr = Runtime.getRuntime().exec(exec);
 
                 try (BufferedReader in = new BufferedReader(new InputStreamReader(pr.getInputStream()))) {
@@ -248,41 +256,39 @@ public class MainWindow extends javax.swing.JFrame {
 
                         System.out.println(line);
 
+                        //If successfull
                         if (line.toLowerCase().contains("now launching the brand new code")) {
-                            //add com por
-                            jLabel1.setText("Successfully updated.");
-                            jLabel1_flag = "Successfully updated.";
-                            jButton1.setEnabled(false);
-                            jButton2.setEnabled(false);
 
+                            statusLabel.setText("Successfully updated.");
                         }
                     }
 
                     pr.waitFor();
 
-                    jComboBox2.setModel(comboData);
+                    //portsCombo.setModel(comboData);
 
-                    if (!jLabel1.toString().contains("Successfully")) {
-                        jLabel1_flag = "Update failed.";
-                        jLabel1.setText("Update failed.");
-                        jButton1.setEnabled(true);
-                        jButton2.setEnabled(true);
+                    if (!statusLabel.toString().contains("Successfully")) {
+                        statusLabel.setText("Update failed.");
                     }
                 }
+                
+                refreshBtn.setEnabled(true);
+                updateBtn.setEnabled(true);
+                        
             } catch (IOException | InterruptedException ex) {
                 Logger.getLogger(MainWindow.class.getName()).log(Level.SEVERE, null, ex);
             }
         } else {
             System.err.println("Unable to determine the system platform to run the executable.");
         }
-    }//GEN-LAST:event_jButton2ActionPerformed
+    }//GEN-LAST:event_updateBtnActionPerformed
 
     /**
      * Refresh button
      * 
      * @param evt 
      */
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void refreshBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_refreshBtnActionPerformed
         Pattern p = null;
         
         if (os == Platform.LINUX) {
@@ -290,11 +296,13 @@ public class MainWindow extends javax.swing.JFrame {
             String re2 = "((?:[a-z][a-z]+))";	// Word 2
             String re3 = "(\\d+)";	// Integer Number 1
             p = Pattern.compile(re1 + re2 + re3, Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
+            
         } else if (os == Platform.MACOSX) {
             String re1 = "(tty)";	// Word 1
-            String re2 = "((?:[a-z][a-z]+))";	// Word 2
-            String re3 = "(\\d+)";	// Integer Number 1
+            String re2 = ".usbserial-";	// Word 2
+            String re3 = "((?:[a-zA-Z0-9]+))";	// Word 3
             p = Pattern.compile(re1 + re2 + re3, Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
+            
         } else if (os == Platform.WINDOWS) {
             String re1 = "((?:[a-z][a-z]+))";	// Word 1
             String re2 = "(\\d+)";	// Integer 1
@@ -310,12 +318,13 @@ public class MainWindow extends javax.swing.JFrame {
                 if (os == Platform.LINUX) {
                     pr = Runtime.getRuntime().exec("dmesg");
                 } else if (os == Platform.MACOSX) {
-                    pr = Runtime.getRuntime().exec("sudo dmesg");
+                    pr = Runtime.getRuntime().exec("ls /dev");
                 } else if (os == Platform.WINDOWS) {
                     pr = Runtime.getRuntime().exec("tools/Enumser.exe");
                 }
 
                 if (pr != null) {
+                    
                     try (BufferedReader in = new BufferedReader(new InputStreamReader(pr.getInputStream()))) {
                         String line;
                         while ((line = in.readLine()) != null) {
@@ -326,7 +335,7 @@ public class MainWindow extends javax.swing.JFrame {
                                 String p1 = m.group(1);
                                 String p2 = m.group(2);
                                 
-                                if (os != Platform.WINDOWS) {
+                                if (os == Platform.LINUX) {
                                     String p3 = m.group(3);
                                     port = p1 + p2 + p3;
                                     
@@ -339,29 +348,40 @@ public class MainWindow extends javax.swing.JFrame {
                                     if (!comPorts.contains(port) & line.contains("attached")) {
 
                                         comPorts.add(port);
-                                        jButton2.setEnabled(true);
+                                        updateBtn.setEnabled(true);
                                     }
-                                } else { //Windows
+                                } else if (os == Platform.MACOSX){ //Mac
+                                    port = p1 + ".usbserial-" + p2;
+                                    
+                                    System.out.println("found:" + port);
+                                    
+                                    if (!comPorts.contains(port)) {
+                                        comPorts.add(port);
+                                        updateBtn.setEnabled(true);
+                                    }                                                                    
+                                
+                                } else if (os == Platform.WINDOWS){ //Windows 
                                     port = p1 + p2;
                                     
                                     System.out.println("found:" + port);
                                     
                                     if (!comPorts.contains(port)) {
                                         comPorts.add(port);
-                                        jButton2.setEnabled(true);
+                                        updateBtn.setEnabled(true);
                                     }
                                     
-                                }
+                                }                                
                             }
                         }
+                        pr.waitFor();
+                        
                         if (comPorts.isEmpty()) {
                             comPorts.add("None found");
-                            jButton2.setEnabled(false);
+                            updateBtn.setEnabled(false);
                         }
-                        pr.waitFor();
-
+                       
                         comboData = new DefaultComboBoxModel(comPorts.toArray());
-                        jComboBox2.setModel(comboData);
+                        portsCombo.setModel(comboData);
                         System.out.println("ok!");
                     }
                 } else {
@@ -374,11 +394,11 @@ public class MainWindow extends javax.swing.JFrame {
         }  else {
             System.err.println("Unable to determine the system platform to run the executable.");
         }
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_refreshBtnActionPerformed
 
-    private void jComboBox2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jComboBox2ActionPerformed
+    private void portsComboActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_portsComboActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jComboBox2ActionPerformed
+    }//GEN-LAST:event_portsComboActionPerformed
 
     private void selectFileBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_selectFileBtnActionPerformed
         // TODO add your handling code here:
@@ -391,7 +411,7 @@ public class MainWindow extends javax.swing.JFrame {
 
             Filename fn = new Filename(filePath, '/', '.');
 
-            jLabel4.setText(fn.filename());
+            selectedFileLabel.setText(fn.filename());
             
             this.selectedFilePath = filePath;
         }
@@ -467,19 +487,20 @@ public class MainWindow extends javax.swing.JFrame {
         });
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
     private javax.swing.JComboBox jComboBox1;
-    private javax.swing.JComboBox jComboBox2;
     private javax.swing.JFileChooser jFileChooser1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
+    private javax.swing.JComboBox portsCombo;
+    private javax.swing.JButton refreshBtn;
     private javax.swing.JButton selectFileBtn;
+    private javax.swing.JLabel selectedFileLabel;
+    private javax.swing.JLabel statusLabel;
+    private javax.swing.JButton updateBtn;
     // End of variables declaration//GEN-END:variables
 
 }
