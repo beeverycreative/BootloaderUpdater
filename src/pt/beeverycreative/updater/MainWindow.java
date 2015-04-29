@@ -211,6 +211,11 @@ public class MainWindow extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    /**
+     * Update button
+     * 
+     * @param evt 
+     */
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
 
         jLabel1_flag = "Updating bootloader.";
@@ -272,67 +277,102 @@ public class MainWindow extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_jButton2ActionPerformed
 
+    /**
+     * Refresh button
+     * 
+     * @param evt 
+     */
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        Pattern p = null;
+        
+        if (os == Platform.LINUX) {
+            String re1 = "(tty)";	// Word 1
+            String re2 = "((?:[a-z][a-z]+))";	// Word 2
+            String re3 = "(\\d+)";	// Integer Number 1
+            p = Pattern.compile(re1 + re2 + re3, Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
+        } else if (os == Platform.MACOSX) {
+            String re1 = "(tty)";	// Word 1
+            String re2 = "((?:[a-z][a-z]+))";	// Word 2
+            String re3 = "(\\d+)";	// Integer Number 1
+            p = Pattern.compile(re1 + re2 + re3, Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
+        } else if (os == Platform.WINDOWS) {
+            String re1 = "((?:[a-z][a-z]+))";	// Word 1
+            String re2 = "(\\d+)";	// Integer 1
+            String re3 = " <USB Serial Port>";	// Fixed string
+            p = Pattern.compile(re1 + re2 + re3, Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
+        }
 
-        String re1 = "(tty)";	// Word 1
-        String re2 = "((?:[a-z][a-z]+))";	// Word 2
-        String re3 = "(\\d+)";	// Integer Number 1
-        Pattern p = Pattern.compile(re1 + re2 + re3, Pattern.CASE_INSENSITIVE | Pattern.DOTALL);
+        if (p != null) {
+            ArrayList<String> comPorts = new ArrayList<>();
 
-        ArrayList<String> comPorts = new ArrayList<>();
+            try {
+                Process pr = null;
+                if (os == Platform.LINUX) {
+                    pr = Runtime.getRuntime().exec("dmesg");
+                } else if (os == Platform.MACOSX) {
+                    pr = Runtime.getRuntime().exec("sudo dmesg");
+                } else if (os == Platform.WINDOWS) {
+                    pr = Runtime.getRuntime().exec("tools/Enumser.exe");
+                }
 
-        try {
-            Process pr = null;
-            if (os == Platform.LINUX) {
-                pr = Runtime.getRuntime().exec("dmesg");
-            } else if (os == Platform.MACOSX) {
-                pr = Runtime.getRuntime().exec("sudo dmesg");
-            } else if (os == Platform.WINDOWS) {
-                pr = Runtime.getRuntime().exec("tools/Enumser.exe");
-            }
-            
-            if (pr != null) {
-                try (BufferedReader in = new BufferedReader(new InputStreamReader(pr.getInputStream()))) {
-                    String line;
-                    while ((line = in.readLine()) != null) {
-                        System.out.println(line);
-                        Matcher m = p.matcher(line);
-                        if (m.find()) {
-                            String word1 = m.group(1);
-                            String word2 = m.group(2);
-                            String int1 = m.group(3);
+                if (pr != null) {
+                    try (BufferedReader in = new BufferedReader(new InputStreamReader(pr.getInputStream()))) {
+                        String line;
+                        while ((line = in.readLine()) != null) {
+                            System.out.println(line);
+                            Matcher m = p.matcher(line);
+                            if (m.find()) {
+                                String port;
+                                String p1 = m.group(1);
+                                String p2 = m.group(2);
+                                
+                                if (os != Platform.WINDOWS) {
+                                    String p3 = m.group(3);
+                                    port = p1 + p2 + p3;
+                                    
+                                    System.out.println("found:" + port);
 
-                            String port = word1 + word2 + int1;
+                                    if (line.contains("disconnected") & comPorts.contains(port)) {
+                                        comPorts.remove(port);
+                                    }
 
-                            System.out.println("found:" + word1 + word2 + int1);
+                                    if (!comPorts.contains(port) & line.contains("attached")) {
 
-                            if (line.contains("disconnected") & comPorts.contains(port)) {
-                                comPorts.remove(word1 + word2 + int1);
-                            }
-
-                            if (!comPorts.contains(port) & line.contains("attached")) {
-
-                                comPorts.add(word1 + word2 + int1);
-                                jButton2.setEnabled(true);
+                                        comPorts.add(port);
+                                        jButton2.setEnabled(true);
+                                    }
+                                } else { //Windows
+                                    port = p1 + p2;
+                                    
+                                    System.out.println("found:" + port);
+                                    
+                                    if (!comPorts.contains(port)) {
+                                        comPorts.add(port);
+                                        jButton2.setEnabled(true);
+                                    }
+                                    
+                                }
                             }
                         }
-                    }
-                    if (comPorts.isEmpty()) {
-                        comPorts.add("None found");
-                        jButton2.setEnabled(false);
-                    }
-                    pr.waitFor();
+                        if (comPorts.isEmpty()) {
+                            comPorts.add("None found");
+                            jButton2.setEnabled(false);
+                        }
+                        pr.waitFor();
 
-                    comboData = new DefaultComboBoxModel(comPorts.toArray());
-                    jComboBox2.setModel(comboData);
-                    System.out.println("ok!");
+                        comboData = new DefaultComboBoxModel(comPorts.toArray());
+                        jComboBox2.setModel(comboData);
+                        System.out.println("ok!");
+                    }
+                } else {
+                    System.err.println("Error executing serial port reader command.");
                 }
-            } else {
-                System.err.println("Error executing serial port reader command.");
+            } catch (IOException | InterruptedException ex) {
+                Logger.getLogger(MainWindow.class.getName()).log(Level.SEVERE, null, ex);
+                System.err.println("Error executing serial port reader command: " + ex.getMessage());
             }
-        } catch (IOException | InterruptedException ex) {
-            Logger.getLogger(MainWindow.class.getName()).log(Level.SEVERE, null, ex);
-            System.err.println("Error executing serial port reader command: " + ex.getMessage());
+        }  else {
+            System.err.println("Unable to determine the system platform to run the executable.");
         }
     }//GEN-LAST:event_jButton1ActionPerformed
 
