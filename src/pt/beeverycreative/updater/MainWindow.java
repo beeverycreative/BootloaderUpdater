@@ -145,7 +145,7 @@ public class MainWindow extends javax.swing.JFrame {
         jLabel3.setText(" Port:");
 
         updateBtn.setFont(new java.awt.Font("Lucida Grande", 1, 14)); // NOI18N
-        updateBtn.setText("Update");
+        updateBtn.setText("Flash bootloader");
         updateBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 updateBtnActionPerformed(evt);
@@ -177,8 +177,13 @@ public class MainWindow extends javax.swing.JFrame {
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addComponent(selectFileBtn)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(selectedFileLabel))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
                         .addContainerGap()
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(statusLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addGroup(jPanel2Layout.createSequentialGroup()
                                 .addComponent(jLabel1)
                                 .addGap(0, 0, Short.MAX_VALUE))
@@ -188,16 +193,10 @@ public class MainWindow extends javax.swing.JFrame {
                                 .addComponent(portsCombo, javax.swing.GroupLayout.PREFERRED_SIZE, 190, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addGap(12, 12, 12)
                                 .addComponent(refreshBtn)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 69, Short.MAX_VALUE)
-                                .addComponent(updateBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(selectFileBtn)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(selectedFileLabel))
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(statusLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
-                .addContainerGap())
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 50, Short.MAX_VALUE)
+                                .addComponent(updateBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(1, 1, 1)))))
+                .addGap(1, 1, 1))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -220,18 +219,18 @@ public class MainWindow extends javax.swing.JFrame {
         );
 
         selectedFileLabel1.setFont(new java.awt.Font("Lucida Grande", 0, 12)); // NOI18N
-        selectedFileLabel1.setText("Selected bootloader:");
+        selectedFileLabel1.setText("Bootloader version:");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(30, 30, 30)
+                .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(selectedFileLabel1)
                     .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(24, Short.MAX_VALUE))
+                .addContainerGap(101, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -253,7 +252,7 @@ public class MainWindow extends javax.swing.JFrame {
      */
     private void updateBtnActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_updateBtnActionPerformed
 
-        statusLabel.setText("Updating bootloader...");
+        statusLabel.setText("Flashing bootloader...");
 
         ArrayList<String> comPorts = new ArrayList<>();
 
@@ -289,7 +288,7 @@ public class MainWindow extends javax.swing.JFrame {
                         //If successfull
                         if (line.toLowerCase().contains("now launching the brand new code")) {
 
-                            statusLabel.setText("Successfully updated.");
+                            statusLabel.setText("Successfully flashed.");
                         }
                     }
 
@@ -298,7 +297,7 @@ public class MainWindow extends javax.swing.JFrame {
                     //portsCombo.setModel(comboData);
 
                     if (!statusLabel.toString().contains("Successfully")) {
-                        statusLabel.setText("Update failed.");
+                        statusLabel.setText("Flashed failed.");
                     }
                 }                
                         

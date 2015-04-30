@@ -1,0 +1,7 @@
+Run the command:
+	
+	ant jar
+
+The file "Updater.jar" will be built on the "dist" folder.
+
+The final release must contain the "Updater.jar" file and the folder "tools".
