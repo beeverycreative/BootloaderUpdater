@@ -4,4 +4,6 @@ Run the command:
 
 The file "Updater.jar" will be built on the "dist" folder.
 
+FINAL RELEASE
 The final release must contain the "Updater.jar" file and the folder "tools".
+Also add the files: "ABOUT.txt" and "lgpl-3.0.txt".
