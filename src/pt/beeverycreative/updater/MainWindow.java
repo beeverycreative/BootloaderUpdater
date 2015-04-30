@@ -4,9 +4,13 @@ import pt.beeverycreative.updater.utils.ExtensionFilter;
 import pt.beeverycreative.updater.utils.Filename;
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
@@ -43,9 +47,30 @@ public class MainWindow extends javax.swing.JFrame {
 
         updateBtn.setEnabled(false);
         statusLabel.setText("");
-        selectedFileLabel.setText("BEETHEFIRST-bootloader-4.1.0");
-        //Default bootloader
-        selectedFilePath = "tools/BEETHEFIRST-bootloader-4.1.0.bin";
+        
+        //Tries to load configuration file
+        Properties prop = null;
+		String propFilePath = "./config.properties";
+        String pathToJar = getClass().getProtectionDomain().getCodeSource().getLocation().toString();
+        
+		InputStream inputStream;
+        try {
+            inputStream = new FileInputStream(propFilePath);
+            		
+            prop = new Properties();
+            prop.load(inputStream);
+        } catch (IOException ex) {
+            Logger.getLogger(MainWindow.class.getName()).log(Level.SEVERE, null, ex);            	
+        }
+        
+        // Disable the file browsing
+        if (prop != null) {
+            selectFileBtn.setEnabled(false);
+            selectFileBtn.setVisible(false);
+            String defaultBootloader = prop.getProperty("default.bootloader");
+            selectedFilePath = "tools/" + defaultBootloader + ".bin";
+            selectedFileLabel.setText(defaultBootloader);
+        } 
     }
 
     /**
@@ -126,9 +151,9 @@ public class MainWindow extends javax.swing.JFrame {
             }
         });
 
-        selectedFileLabel.setText("bootloader 3.4.0 ");
+        selectedFileLabel.setText("Please select a bootloader file.");
 
-        selectFileBtn.setText("Select Bootloader...");
+        selectFileBtn.setText("Browse...");
         selectFileBtn.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mousePressed(java.awt.event.MouseEvent evt) {
                 selectFileBtnMousePressed(evt);
@@ -163,9 +188,6 @@ public class MainWindow extends javax.swing.JFrame {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 69, Short.MAX_VALUE)
                                 .addComponent(updateBtn, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE))))
                     .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addGap(81, 81, 81)
-                        .addComponent(jLabel2))
-                    .addGroup(jPanel2Layout.createSequentialGroup()
                         .addComponent(selectFileBtn)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(selectedFileLabel))
@@ -173,6 +195,10 @@ public class MainWindow extends javax.swing.JFrame {
                         .addContainerGap()
                         .addComponent(statusLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addContainerGap())
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(jLabel2)
+                .addGap(118, 118, 118))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -270,10 +296,7 @@ public class MainWindow extends javax.swing.JFrame {
                     if (!statusLabel.toString().contains("Successfully")) {
                         statusLabel.setText("Update failed.");
                     }
-                }
-                
-                refreshBtn.setEnabled(true);
-                updateBtn.setEnabled(true);
+                }                
                         
             } catch (IOException | InterruptedException ex) {
                 Logger.getLogger(MainWindow.class.getName()).log(Level.SEVERE, null, ex);
@@ -281,6 +304,9 @@ public class MainWindow extends javax.swing.JFrame {
         } else {
             System.err.println("Unable to determine the system platform to run the executable.");
         }
+        
+        refreshBtn.setEnabled(true);
+        updateBtn.setEnabled(true);
     }//GEN-LAST:event_updateBtnActionPerformed
 
     /**
