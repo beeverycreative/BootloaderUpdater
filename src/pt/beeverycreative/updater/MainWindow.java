@@ -5,7 +5,6 @@ import pt.beeverycreative.updater.utils.Filename;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -43,7 +42,7 @@ public class MainWindow extends javax.swing.JFrame {
      */
     public MainWindow() {
         initComponents();
-        setTitle("BEEVERYCREATIVE BootLoader Updater");
+        setTitle("BEEVERYCREATIVE Bootloader Updater - v2.0.0");
 
         updateBtn.setEnabled(false);
         statusLabel.setText("");
@@ -51,7 +50,6 @@ public class MainWindow extends javax.swing.JFrame {
         //Tries to load configuration file
         Properties prop = null;
 		String propFilePath = "./config.properties";
-        String pathToJar = getClass().getProtectionDomain().getCodeSource().getLocation().toString();
         
 		InputStream inputStream;
         try {
@@ -64,13 +62,19 @@ public class MainWindow extends javax.swing.JFrame {
         }
         
         // Disable the file browsing
-        if (prop != null) {
+        if (prop != null) {            
             selectFileBtn.setEnabled(false);
             selectFileBtn.setVisible(false);
             String defaultBootloader = prop.getProperty("default.bootloader");
+            
             selectedFilePath = "tools/" + defaultBootloader + ".bin";
             selectedFileLabel.setText(defaultBootloader);
-        } 
+            
+        } else {
+            selectedFileLabel1.setVisible(false);
+            selectFileBtn.setEnabled(true);
+            selectFileBtn.setVisible(true);
+        }
     }
 
     /**
@@ -87,7 +91,6 @@ public class MainWindow extends javax.swing.JFrame {
         jPanel3 = new javax.swing.JPanel();
         jFileChooser1 = new javax.swing.JFileChooser();
         jPanel2 = new javax.swing.JPanel();
-        jLabel2 = new javax.swing.JLabel();
         portsCombo = new javax.swing.JComboBox();
         refreshBtn = new javax.swing.JButton();
         jLabel3 = new javax.swing.JLabel();
@@ -96,6 +99,7 @@ public class MainWindow extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         selectFileBtn = new javax.swing.JButton();
         statusLabel = new javax.swing.JLabel();
+        selectedFileLabel1 = new javax.swing.JLabel();
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -124,9 +128,6 @@ public class MainWindow extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setResizable(false);
 
-        jLabel2.setFont(new java.awt.Font("Lucida Grande", 1, 13)); // NOI18N
-        jLabel2.setText("BEEVERYCREATIVE Bootloader Updater");
-
         portsCombo.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Please Refresh" }));
         portsCombo.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -143,7 +144,7 @@ public class MainWindow extends javax.swing.JFrame {
 
         jLabel3.setText(" Port:");
 
-        updateBtn.setFont(new java.awt.Font("Lucida Grande", 1, 13)); // NOI18N
+        updateBtn.setFont(new java.awt.Font("Lucida Grande", 1, 14)); // NOI18N
         updateBtn.setText("Update");
         updateBtn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -151,6 +152,7 @@ public class MainWindow extends javax.swing.JFrame {
             }
         });
 
+        selectedFileLabel.setFont(new java.awt.Font("Lucida Grande", 1, 13)); // NOI18N
         selectedFileLabel.setText("Please select a bootloader file.");
 
         selectFileBtn.setText("Browse...");
@@ -165,6 +167,7 @@ public class MainWindow extends javax.swing.JFrame {
             }
         });
 
+        statusLabel.setFont(new java.awt.Font("Lucida Grande", 1, 13)); // NOI18N
         statusLabel.setText("Current Status");
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
@@ -195,17 +198,11 @@ public class MainWindow extends javax.swing.JFrame {
                         .addContainerGap()
                         .addComponent(statusLabel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                 .addContainerGap())
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
-                .addGap(0, 0, Short.MAX_VALUE)
-                .addComponent(jLabel2)
-                .addGap(118, 118, 118))
         );
         jPanel2Layout.setVerticalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jLabel2)
-                .addGap(14, 14, 14)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(selectFileBtn)
                     .addComponent(selectedFileLabel))
@@ -215,12 +212,15 @@ public class MainWindow extends javax.swing.JFrame {
                     .addComponent(portsCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel3)
                     .addComponent(updateBtn))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGap(18, 18, 18)
                 .addComponent(statusLabel)
-                .addGap(32, 32, 32)
+                .addGap(26, 26, 26)
                 .addComponent(jLabel1)
                 .addGap(116, 116, 116))
         );
+
+        selectedFileLabel1.setFont(new java.awt.Font("Lucida Grande", 0, 12)); // NOI18N
+        selectedFileLabel1.setText("Selected bootloader:");
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
@@ -228,14 +228,18 @@ public class MainWindow extends javax.swing.JFrame {
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGap(30, 30, 30)
-                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(selectedFileLabel1)
+                    .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(24, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, 146, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(selectedFileLabel1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jPanel2, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
 
@@ -516,7 +520,6 @@ public class MainWindow extends javax.swing.JFrame {
     private javax.swing.JComboBox jComboBox1;
     private javax.swing.JFileChooser jFileChooser1;
     private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
@@ -525,6 +528,7 @@ public class MainWindow extends javax.swing.JFrame {
     private javax.swing.JButton refreshBtn;
     private javax.swing.JButton selectFileBtn;
     private javax.swing.JLabel selectedFileLabel;
+    private javax.swing.JLabel selectedFileLabel1;
     private javax.swing.JLabel statusLabel;
     private javax.swing.JButton updateBtn;
     // End of variables declaration//GEN-END:variables
