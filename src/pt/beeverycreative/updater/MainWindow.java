@@ -42,7 +42,7 @@ public class MainWindow extends javax.swing.JFrame {
      */
     public MainWindow() {
         initComponents();
-        setTitle("BEEVERYCREATIVE Bootloader Updater - v2.0.0");
+        setTitle("BEEVERYCREATIVE Bootloader Updater - v2.1.1");
 
         updateBtn.setEnabled(false);
         statusLabel.setText("");
